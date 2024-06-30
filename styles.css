@@ -36,3 +36,28 @@ main {
 section {
     margin-bottom: 2em;
 }
+
+h1 {
+    font-size: 2em; /* 例として2emを設定 */
+}
+
+h2 {
+    font-size: 1.5em; /* h1より小さいサイズ */
+}
+
+h3 {
+    font-size: 1.17em; /* h2より小さいサイズ */
+}
+
+/* 以下同様にh4, h5, h6に対してもサイズを設定 */
+h4 {
+    font-size: 1em;
+}
+
+h5 {
+    font-size: 0.83em;
+}
+
+h6 {
+    font-size: 0.67em;
+}
