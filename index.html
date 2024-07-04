@@ -3,92 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>基本的なウェブサイト</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>献立提案アプリ</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        input, button {
+            padding: 10px;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+        button {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
-    <header>
-        <nav>
-            <ul>
-                <li><a href="#section1">HTML</a></li>
-                <li><a href="#section2">Python</a></li>
-                <li><a href="#section3">ポーカー</a></li>
-            </ul>
-        </nav>
-    </header>
+    <div class="container">
+        <h1>献立提案アプリ</h1>
+        <label for="food">好きな料理を入力してください:</label>
+        <input type="text" id="food" placeholder="例: カレー">
+        <button id="searchButton">検索</button>
+        <p id="result"></p>
+    </div>
 
-<main>
-        <section id="section1">
-            <section>
-                <h1>HTMLの基本構文</h1>
-            </section>
-            <section>
-                <h3>見出し</h3>
-                <p>見出しは、文章のセクションを分けるために使います。大きさは、<code>&lt;h1&gt;</code>から<code>&lt;h6&gt;</code>まであります。</p>
-                <h1><code>&lt;h1&gt;</code>見出し1</h1>
-                <h2><code>&lt;h2&gt;</code>見出し2</h2>
-                <h3><code>&lt;h3&gt;</code>見出し3</h3>
-                <h4><code>&lt;h4&gt;</code>見出し4</h4>
-                <h5><code>&lt;h5&gt;</code>見出し5</h6>
-                <h6><code>&lt;h6&gt;</code>見出し6</h6>
-            </section>
-            <section>
-                <h3>段落</h3>
-                <p>段落は、<code>&lt;p&gt;</code>タグを使って書きます。テキストをまとめるために使います。</p>
-                <p>これは段落の例です。</p>
-            </section>
-            <section>
-                <h3>リンク</h3>
-                <p>リンクは、他のページやウェブサイトに飛ぶために使います。<code>&lt;a&gt;</code>タグを使います。</p>
-                <a href="https://www.google.com/search?q=youtube+&sca_esv=42f3e948118a1926&rlz=1C5CHFA_enJP1091JP1091&sxsrf=ADLYWILotp1vIBoz9CZvGVT-5CRmjaB7UA%3A1719749187549&ei=Q0qBZuqcIfq8vr0Pt5TByAE&ved=0ahUKEwiqyrT7pIOHAxV6nq8BHTdKEBkQ4dUDCBA&uact=5&oq=youtube+&gs_lp=Egxnd3Mtd2l6LXNlcnAaAhgDIgh5b3V0dWJlIDIKECMYgAQYJxiKBTINEAAYgAQYsQMYgwEYBDIQEAAYgAQYsQMYgwEYBBiLAzIQEAAYgAQYsQMYgwEYBBiLAzITEAAYgAQYsQMYQxiDARiKBRiLAzINEAAYgAQYQxiKBRiLAzIQEAAYgAQYsQMYgwEYBBiLAzILEAAYgAQYsQMYgwEyCxAAGIAEGLEDGIMBMgUQABiABEiyHlCLEVinHHABeAKQAQCYAWKgAZMFqgEBN7gBA8gBAPgBAZgCCaACsgXCAgQQABhHwgIKEAAYsAMY1gQYR8ICEBAAGIAEGLEDGEMYgwEYigXCAggQABiABBiLA8ICCBAAGIAEGLEDwgIOEAAYgAQYsQMYgwEYiwOYAwCIBgGQBgqSBwM2LjOgB80p&sclient=gws-wiz-serp">例のリンク</a>
-            </section>
-            <section>
-                <h3>リスト</h3>
-                <p>リストは、項目を並べるために使います。順序付きリストは<code>&lt;ol&gt;</code>、順序なしリストは<code>&lt;ul&gt;</code>を使います。</p>
-                <h4>順序付きリスト</h4>
-                <ol>
-                    <li>最初の項目</li>
-                    <li>次の項目</li>
-                    <li>最後の項目</li>
-                </ol>
-                <h4>順序なしリスト</h4>
-                <ul>
-                    <li>最初の項目</li>
-                    <li>次の項目</li>
-                    <li>最後の項目</li>
-                </ul>
-            </section>
-            <section>
-                <h3>画像</h3>
-                <p>画像は、<code>&lt;img&gt;</code>タグを使って表示します。<code>src</code>属性で画像のURLを指定します。</p>
-                <img src="https://www.example.com/image.jpg" alt="例の画像">
-            </section>
-        </section>
-    <section id="section2">
-        <section>
-            <h1>python</h1>
-        </section>
-        <section>
-            <h2>Pythonで重要な関数</h2>
-            <ul>
-                <li>print</li>
-                    <p>print()で、()の中を出力</p>
-                    <p>例：print("hello world")　→ hello world</p>
-            </ul>
-            <p>私は浅川青です。</p>
-        </setion>
-    </section>
-        
-    </main>
-
-    <footer>
-        <nav>
-            <ul>
-                <li><a href="#section1">プログラミング</a></li>
-                <li><a href="#section2">ポーカー</a></li>
-                <li><a href="#section3">勉強</a></li>
-            </ul>
-        </nav>
-    </footer>
+    <script>
+        document.getElementById('searchButton').addEventListener('click', function() {
+            var favoriteFood = document.getElementById('food').value;
+            var result = favoriteFood + 'のレシピを探しますね！';
+            document.getElementById('result').innerText = result;
+        });
+    </script>
 </body>
 </html>
