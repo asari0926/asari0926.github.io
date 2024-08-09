@@ -63,9 +63,8 @@
 
         function playSound() {
             const sound = document.getElementById('paymentSound');
-            sound.play().catch(error => {
-                console.error("音声再生エラー:", error);
-            });
+            sound.currentTime = 0;  // 音声を最初から再生
+            sound.play();  // 音声を再生
         }
     </script>
 
