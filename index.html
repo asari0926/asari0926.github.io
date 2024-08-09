@@ -53,10 +53,11 @@
         }
 
         function playSound() {
-            document.getElementById('aoaoSound').play(); // 音声を再生
+            const sound = document.getElementById('aoaoSound');
+            sound.currentTime = 0;  // 音声を最初から再生する
+            sound.play();  // 音声を再生
         }
     </script>
 
 </body>
 </html>
-
