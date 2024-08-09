@@ -34,7 +34,7 @@
 <body>
 
     <h1>飲み物を選んでください</h1>
-    <span id="money">所持金: 1000円</span>
+    <span id="money">所持金: 200円</span> <!-- 所持金を200円に変更 -->
 
     <!-- 飲み物を選択するボタン -->
     <button class="drink-button" onclick="buyDrink('三ツ矢サイダー', 30)">三ツ矢サイダー (30円)</button>
@@ -48,7 +48,7 @@
     <audio id="paymentSound" src="sounds/決済ボタンを押す1.mp3"></audio>
 
     <script>
-        let money = 1000; // 所持金
+        let money = 200; // 所持金を200円に設定
 
         function buyDrink(drink, price) {
             if (money >= price) {
