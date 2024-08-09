@@ -37,12 +37,13 @@
     <span id="money">所持金: 1000円</span>
 
     <!-- 飲み物を選択するボタン -->
-    <button class="drink-button" onclick="buyDrink('コーラ')">コーラ (200円)</button>
-    <button class="drink-button" onclick="buyDrink('ファンタ')">ファンタ (200円)</button>
-    <button class="drink-button" onclick="buyDrink('リンゴジュース')">リンゴジュース (200円)</button>
-    <button class="drink-button" onclick="buyDrink('スプライト')">スプライト (200円)</button>
-    <button class="drink-button" onclick="buyDrink('ドクターペッパー')">ドクターペッパー (200円)</button>
-    <button class="drink-button" onclick="buyDrink('アサヒ')">アサヒ (200円)</button>
+    <button class="drink-button" onclick="buyDrink('三ツ矢サイダー', 200)">三ツ矢サイダー (200円)</button>
+    <button class="drink-button" onclick="buyDrink('コーラ', 200)">コーラ (200円)</button>
+    <button class="drink-button" onclick="buyDrink('ドクターペッパー', 200)">ドクターペッパー (200円)</button>
+    <button class="drink-button" onclick="buyDrink('アサヒビール', 350)">アサヒビール (350円)</button>
+    <button class="drink-button" onclick="buyDrink('アサヒノンアルコールビール', 300)">アサヒノンアルコールビール (300円)</button>
+    <button class="drink-button" onclick="buyDrink('りんごジュース', 200)">りんごジュース (200円)</button>
+    <button class="drink-button" onclick="buyDrink('ファンタ', 200)">ファンタ (200円)</button>
 
     <!-- 音声ファイルを読み込む -->
     <audio id="paymentSound" src="sounds/決済ボタンを押す1.mp3"></audio>
@@ -50,9 +51,9 @@
     <script>
         let money = 1000; // 所持金
 
-        function buyDrink(drink) {
-            if (money >= 200) {
-                money -= 200;
+        function buyDrink(drink, price) {
+            if (money >= price) {
+                money -= price;
                 document.getElementById('money').textContent = "所持金: " + money + "円";
                 alert(drink + "を選びました！");
                 playSound(); // 音を再生
@@ -63,11 +64,11 @@
 
         function playSound() {
             const sound = document.getElementById('paymentSound');
-            sound.currentTime = 0;  // 音声を最初から再生
-            sound.play();  // 音声を再生
+            sound.play().catch(error => {
+                console.error("音声再生エラー:", error);
+            });
         }
     </script>
 
 </body>
 </html>
-
