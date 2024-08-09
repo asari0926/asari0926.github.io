@@ -3,30 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>クッキング</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>飲み物選択</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .drink-button {
+            margin: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+        #money {
+            font-size: 20px;
+            margin-bottom: 20px;
+            display: block;
+        }
+    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>クッキング</h1>
-        <label for="food">好きな料理を入力してください:</label>
-        <input type="text" id="food" placeholder="例: カレー">
-        <button id="searchButton">検索</button>
-        <p id="result"></p>
-    </div>
-        <div class="container">
-        <h1>説明書</h1>
-        <h2>サーバー</h2>
-            <p></p>
 
-    </div>
+    <h1>飲み物を選んでください</h1>
+    <span id="money">所持金: 1000円</span>
+
+    <!-- 飲み物を選択するボタン -->
+    <button class="drink-button" onclick="buyDrink('コーラ')">コーラ (200円)</button>
+    <button class="drink-button" onclick="buyDrink('ファンタ')">ファンタ (200円)</button>
+    <button class="drink-button" onclick="buyDrink('リンゴジュース')">リンゴジュース (200円)</button>
+    <button class="drink-button" onclick="buyDrink('スプライト')">スプライト (200円)</button>
+    <button class="drink-button" onclick="buyDrink('ドクターペッパー')">ドクターペッパー (200円)</button>
+    <button class="drink-button" onclick="buyDrink('アサヒ')">アサヒ (200円)</button>
 
     <script>
-        document.getElementById('searchButton').addEventListener('click', function() {
-            var favoriteFood = document.getElementById('food').value;
-            var result = favoriteFood + 'のレシピを探しますね！';
-            document.getElementById('result').innerText = result;
-        });
+        let money = 1000; // 所持金
+
+        function buyDrink(drink) {
+            if (money >= 200) {
+                money -= 200;
+                document.getElementById('money').textContent = "所持金: " + money + "円";
+                alert(drink + "を選びました！");
+            } else {
+                alert("所持金が足りません。");
+            }
+        }
     </script>
+
 </body>
 </html>
