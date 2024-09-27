@@ -173,18 +173,20 @@
         function endGame() {
             document.getElementById('game-over-message').style.display = 'block'; // ゲームオーバーメッセージを表示
             document.getElementById('fight-button').disabled = true; // 戦うボタンを無効にする
-            document.getElementById('enemy-buttons').style.display = 'none'; // 敵のボタンを非表示にする
+            document.getElementById('home-button').disabled = true; // ホームボタンを無効にする
+            document.getElementById('enemy-buttons').style.display = 'none'; // 敵のボタンを非表示
         }
 
-        // ホーム画面とゲーム画面の切り替え
-        function showGameScreen() {
-            document.getElementById('home-screen').style.display = 'none';
-            document.getElementById('game-screen').style.display = 'block';
-            generateEnemies(); // 敵を生成
-            document.getElementById('message').innerHTML = ''; // メッセージをクリア
+        // ホーム画面の表示
+        function showHomeScreen() {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('shop-screen').style.display = 'none';
+            document.getElementById('quest-screen').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'block';
             document.getElementById('game-over-message').style.display = 'none'; // ゲームオーバーメッセージを非表示にする
-            document.getElementById('enemy-buttons').style.display = 'block'; // 敵のボタンを表示
-            document.getElementById('fight-button').disabled = true; // 戦うボタンを無効にする
+            document.getElementById('coin-count').textContent = coinCount; // コインの表示を更新
+            fightCount = 0; // 勝った数をリセット
+            playerLevel = 5; // プレイヤーのレベルをリセット
         }
 
         // ショップ画面の表示
