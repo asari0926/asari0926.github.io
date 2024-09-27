@@ -54,7 +54,6 @@
 
     <div id="game-screen">
         <h1>数字バトルゲーム</h1>
-        <button id="home-button">ホーム</button>
         <p>プレイヤーのレベル: <span id="player-number">レベル 5</span></p>
         <p id="enemy-numbers"></p>
         <p id="message"></p>
@@ -62,7 +61,7 @@
         <div id="enemy-buttons"></div>
         
         <button id="fight-button" disabled>戦う</button>
-        <div id="game-over-message">ゲームオーバー！</div> <!-- ゲームオーバーメッセージ -->
+        <div id="game-over-message">ゲームオーバー！あなたはゲームをクリアしました！</div> <!-- ゲームオーバーメッセージ -->
     </div>
 
     <div id="shop-screen">
@@ -156,7 +155,6 @@
             } else if (finalEnemyAppeared && playerLevel > 100) {
                 message += `レベル100の敵を倒しました！クエストをクリアしました。`;
                 document.getElementById('fight-button').disabled = true; // ゲームクリアしたらボタンを無効にする
-                alert('あなたはゲームをクリアしました！'); // ゲームクリアのアラートを表示
                 showHomeScreen(); // ホーム画面に戻る
                 return; // 終了
             }
@@ -173,77 +171,81 @@
         function endGame() {
             document.getElementById('game-over-message').style.display = 'block'; // ゲームオーバーメッセージを表示
             document.getElementById('fight-button').disabled = true; // 戦うボタンを無効にする
-            document.getElementById('home-button').disabled = true; // ホームボタンを無効にする
-            document.getElementById('enemy-buttons').style.display = 'none'; // 敵のボタンを非表示
+            document.getElementById('enemy-buttons').style.display = 'none'; // 敵のボタンを非表示にする
+            document.getElementById('shop-home-button').style.display = 'none'; // ホームボタンを非表示にする
         }
 
-        // ホーム画面の表示
+        // ホーム画面に戻る関数
         function showHomeScreen() {
-            document.getElementById('game-screen').style.display = 'none';
-            document.getElementById('shop-screen').style.display = 'none';
-            document.getElementById('quest-screen').style.display = 'none';
-            document.getElementById('home-screen').style.display = 'block';
-            document.getElementById('game-over-message').style.display = 'none'; // ゲームオーバーメッセージを非表示にする
-            document.getElementById('coin-count').textContent = coinCount; // コインの表示を更新
-            fightCount = 0; // 勝った数をリセット
-            playerLevel = 5; // プレイヤーのレベルをリセット
+            document.getElementById('game-over-message').style.display = 'none'; // ゲームオーバーメッセージを非表示
+            document.getElementById('enemy-buttons').style.display = 'block'; // 敵のボタンを再表示
+            document.getElementById('shop-home-button').style.display = 'block'; // ホームボタンを再表示
+            document.getElementById('home-screen').style.display = 'block'; // ホーム画面を表示
+            document.getElementById('game-screen').style.display = 'none'; // ゲーム画面を非表示
+            document.getElementById('shop-screen').style.display = 'none'; // ショップ画面を非表示
+            document.getElementById('quest-screen').style.display = 'none'; // クエスト画面を非表示
         }
 
-        // ショップ画面の表示
-        function showShopScreen() {
-            document.getElementById('home-screen').style.display = 'none';
-            document.getElementById('shop-screen').style.display = 'block';
-        }
-
-        // クエスト画面の表示
-        function showQuestScreen() {
-            document.getElementById('home-screen').style.display = 'none';
-            document.getElementById('quest-screen').style.display = 'block';
+        // ショップ画面に移動
+        document.getElementById('start-button').addEventListener('click', () => {
+            document.getElementById('home-screen').style.display = 'none'; // ホーム画面を非表示
+            document.getElementById('game-screen').style.display = 'block'; // ゲーム画面を表示
+            generateEnemies(); // 敵を生成
+        });
+        document.getElementById('shop-button').addEventListener('click', () => {
+            document.getElementById('home-screen').style.display = 'none'; // ホーム画面を非表示
+            document.getElementById('shop-screen').style.display = 'block'; // ショップ画面を表示
+        });
+        document.getElementById('quest-button').addEventListener('click', () => {
+            document.getElementById('home-screen').style.display = 'none'; // ホーム画面を非表示
+            document.getElementById('quest-screen').style.display = 'block'; // クエスト画面を表示
             updateQuestList(); // クエストリストを更新
-        }
+        });
+        document.getElementById('fight-button').addEventListener('click', fight); // 戦うボタンのイベント
+        document.getElementById('shop-home-button').addEventListener('click', showHomeScreen); // ショップ画面からホームに戻る
+        document.getElementById('quest-home-button').addEventListener('click', showHomeScreen); // クエスト画面からホームに戻る
+        
+        // ショップのアイテムを選択
+        document.querySelectorAll('.shop-choice').forEach(button => {
+            button.addEventListener('click', function () {
+                const cost = parseInt(this.textContent.match(/\((\d+)コイン\)/)[1]); // コストを抽出
+                if (coinCount >= cost) {
+                    coinCount -= cost; // コインを減らす
+                    const levelIncrease = parseInt(this.id.split('-')[2]); // レベルの増加
+                    playerLevel += levelIncrease; // プレイヤーレベルを増やす
+                    document.getElementById('shop-message').textContent = `レベルが ${levelIncrease} 上がりました！`;
+                } else {
+                    document.getElementById('shop-message').textContent = `コインが足りません！`;
+                }
+                document.getElementById('coin-count').textContent = coinCount; // コインの表示を更新
+            });
+        });
 
-        // クエストリストを更新する関数
+        // クエストを表示
         function updateQuestList() {
             const questListDiv = document.getElementById('quest-list');
             questListDiv.innerHTML = ''; // リストをクリア
             quests.forEach((quest, index) => {
                 if (!quest.completed) {
-                    const questDiv = document.createElement('div');
-                    questDiv.innerHTML = `${index + 1}. ${quest.level}以上のレベルの敵を倒してみよう！ ${quest.reward}コイン <button onclick="completeQuest(${index})">完了</button>`;
-                    questListDiv.appendChild(questDiv);
+                    const questItem = document.createElement('div');
+                    questItem.textContent = `クエスト ${index + 1}: レベル ${quest.level}（報酬: ${quest.reward} コイン）`;
+                    questItem.classList.add('quest-item');
+                    questItem.addEventListener('click', () => completeQuest(index)); // クリックでクエスト完了
+                    questListDiv.appendChild(questItem);
                 }
             });
-            if (questListDiv.innerHTML === '') {
-                questListDiv.innerHTML = '<p>すべてのクエストをクリアしました！</p>';
-            }
         }
 
-        // クエスト完了の処理
+        // クエストを完了する関数
         function completeQuest(index) {
-            const quest = quests[index];
-            if (quest.completed) {
-                alert('このクエストはすでに完了しています。');
-                return;
-            }
-            if (playerLevel >= quest.level) {
-                quest.completed = true; // クエストを完了にする
-                coinCount += quest.reward; // コインを追加
-                alert(`${quest.reward}コインを獲得しました！`);
-                updateQuestList(); // クエストリストを更新
+            if (!quests[index].completed) {
+                quests[index].completed = true; // クエストを完了にする
+                coinCount += quests[index].reward; // 報酬を受け取る
                 document.getElementById('coin-count').textContent = coinCount; // コインの表示を更新
-            } else {
-                alert('レベルが足りません！');
+                alert(`クエスト ${index + 1} をクリアしました！報酬: ${quests[index].reward} コイン`);
+                updateQuestList(); // クエストリストを更新
             }
         }
-
-        // イベントリスナーの設定
-        document.getElementById('start-button').addEventListener('click', showGameScreen);
-        document.getElementById('shop-button').addEventListener('click', showShopScreen);
-        document.getElementById('quest-button').addEventListener('click', showQuestScreen);
-        document.getElementById('fight-button').addEventListener('click', fight);
-        document.getElementById('home-button').addEventListener('click', showHomeScreen);
-        document.getElementById('shop-home-button').addEventListener('click', showHomeScreen);
-        document.getElementById('quest-home-button').addEventListener('click', showHomeScreen);
     </script>
 </body>
 </html>
