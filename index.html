@@ -184,4 +184,14 @@
 
         // ホームとショップの切り替えボタン
         document.getElementById('start-button').addEventListener('click', showGameScreen);
-        document.getElementById('shop
+        document.getElementById('shop-button').addEventListener('click', showShopScreen);
+        document.getElementById('home-button').addEventListener('click', showHomeScreen);
+        document.getElementById('shop-home-button').addEventListener('click', showHomeScreen);
+
+        // ショップのアイテムにイベントを設定
+        document.getElementById('level-up-1').addEventListener('click', () => levelUp(1));
+        document.getElementById('level-up-3').addEventListener('click', () => levelUp(3));
+        document.getElementById('level-up-10').addEventListener('click', () => levelUp(10));
+    </script>
+</body>
+</html>
