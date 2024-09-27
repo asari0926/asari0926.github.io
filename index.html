@@ -33,6 +33,12 @@
             font-size: 20px;
             color: gold;
         }
+        #game-over-message {
+            display: none; /* ゲームオーバーメッセージを非表示 */
+            font-size: 48px; /* 大きなフォントサイズ */
+            color: red; /* 赤色 */
+            margin-top: 100px; /* 上にスペースを確保 */
+        }
     </style>
 </head>
 <body>
@@ -56,6 +62,7 @@
         <div id="enemy-buttons"></div>
         
         <button id="fight-button" disabled>戦う</button>
+        <div id="game-over-message">ゲームオーバー！</div> <!-- ゲームオーバーメッセージ -->
     </div>
 
     <div id="shop-screen">
@@ -164,22 +171,20 @@
 
         // ゲームオーバー処理
         function endGame() {
-            document.getElementById('message').innerHTML = 'ゲームオーバー！'; // ゲームオーバーメッセージを表示
+            document.getElementById('game-over-message').style.display = 'block'; // ゲームオーバーメッセージを表示
             document.getElementById('fight-button').disabled = true; // 戦うボタンを無効にする
+            document.getElementById('enemy-buttons').style.display = 'none'; // 敵のボタンを非表示にする
         }
 
         // ホーム画面とゲーム画面の切り替え
         function showGameScreen() {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
-            generateEnemies(); // ゲーム画面の初期表示
-        }
-
-        function showHomeScreen() {
-            document.getElementById('game-screen').style.display = 'none';
-            document.getElementById('shop-screen').style.display = 'none';
-            document.getElementById('quest-screen').style.display = 'none';
-            document.getElementById('home-screen').style.display = 'block';
+            generateEnemies(); // 敵を生成
+            document.getElementById('message').innerHTML = ''; // メッセージをクリア
+            document.getElementById('game-over-message').style.display = 'none'; // ゲームオーバーメッセージを非表示にする
+            document.getElementById('enemy-buttons').style.display = 'block'; // 敵のボタンを表示
+            document.getElementById('fight-button').disabled = true; // 戦うボタンを無効にする
         }
 
         // ショップ画面の表示
@@ -192,6 +197,41 @@
         function showQuestScreen() {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('quest-screen').style.display = 'block';
+            updateQuestList(); // クエストリストを更新
+        }
+
+        // クエストリストを更新する関数
+        function updateQuestList() {
+            const questListDiv = document.getElementById('quest-list');
+            questListDiv.innerHTML = ''; // リストをクリア
+            quests.forEach((quest, index) => {
+                if (!quest.completed) {
+                    const questDiv = document.createElement('div');
+                    questDiv.innerHTML = `${index + 1}. ${quest.level}以上のレベルの敵を倒してみよう！ ${quest.reward}コイン <button onclick="completeQuest(${index})">完了</button>`;
+                    questListDiv.appendChild(questDiv);
+                }
+            });
+            if (questListDiv.innerHTML === '') {
+                questListDiv.innerHTML = '<p>すべてのクエストをクリアしました！</p>';
+            }
+        }
+
+        // クエスト完了の処理
+        function completeQuest(index) {
+            const quest = quests[index];
+            if (quest.completed) {
+                alert('このクエストはすでに完了しています。');
+                return;
+            }
+            if (playerLevel >= quest.level) {
+                quest.completed = true; // クエストを完了にする
+                coinCount += quest.reward; // コインを追加
+                alert(`${quest.reward}コインを獲得しました！`);
+                updateQuestList(); // クエストリストを更新
+                document.getElementById('coin-count').textContent = coinCount; // コインの表示を更新
+            } else {
+                alert('レベルが足りません！');
+            }
         }
 
         // イベントリスナーの設定
