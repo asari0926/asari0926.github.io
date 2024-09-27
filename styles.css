@@ -1,24 +1,16 @@
-body {
-    font-family: Arial, sans-serif;
-    margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
-}
-
-.container {
-    max-width: 600px;
-    margin: 0 auto;
-    padding: 20px;
-    background-color: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-input, button {
-    padding: 10px;
-    font-size: 16px;
-    margin-top: 10px;
-}
-
-button {
-    cursor: pointer;
-}
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字バトルゲーム</title>
+</head>
+<body>
+    <h1>数字バトルゲーム</h1>
+    <p>プレイヤーの数字: <span id="player-number">5</span></p>
+    <p>敵の数字: <span id="enemy-number"></span></p>
+    <p id="message"></p>
+    <button id="fight-button">戦う</button>
+    <script src="game.js"></script>
+</body>
+</html>
