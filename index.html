@@ -82,24 +82,23 @@
 
         // 敵の表示を更新する関数
         function updateEnemyDisplay() {
-            document.getElementById('enemy-numbers').innerHTML = enemies.map(level => `敵のレベル: ${level}`).join('<br>');
+            document.getElementById('enemy-numbers').innerHTML = enemies.map((level, index) => `敵${index + 1}のレベル: ${level}`).join('<br>');
         }
 
         // プレイヤーの選択肢を生成（1〜5からランダムに3つ）
         function generateChoices() {
-            let choices = [];
+            choices = [];
             while (choices.length < 3) {
                 let randomChoice = Math.floor(Math.random() * 5) + 1;
                 if (!choices.includes(randomChoice)) {
                     choices.push(randomChoice);
                 }
             }
-            return choices;
+            updateChoices();
         }
 
-        // ページ読み込み時に敵のレベルとプレイヤーの選択肢を表示
+        // 選択肢を画面に表示
         function updateChoices() {
-            choices = generateChoices();
             document.getElementById('choice1').textContent = `レベル ${choices[0]}`;
             document.getElementById('choice2').textContent = `レベル ${choices[1]}`;
             document.getElementById('choice3').textContent = `レベル ${choices[2]}`;
@@ -107,10 +106,10 @@
         }
 
         // ゲームのロジック
-        function fight() {
+        function fight(selectedChoice) {
             let message = '';
 
-            // プレイヤーが敵を一体ずつ相手にする
+            // 敵と戦う
             for (let enemyLevel of enemies) {
                 if (playerLevel > enemyLevel) {
                     message += `敵（レベル ${enemyLevel}）に勝ちました！<br>`;
@@ -135,20 +134,20 @@
             // メッセージとプレイヤーのレベルの更新
             document.getElementById('player-number').textContent = `レベル ${playerLevel}`;
             document.getElementById('message').innerHTML = message;
+            generateChoices(); // 戦った後に新しい選択肢を生成
         }
 
         // 数字を選んだ時の処理
         function selectChoice(choice) {
-            playerLevel = choice;
-            document.getElementById('player-number').textContent = `レベル ${playerLevel}`;
-            document.getElementById('fight-button').disabled = false; // 戦うボタンを有効にする
+            // プレイヤーが選んだ数字と敵と戦う
+            fight(choice);
         }
 
         // ホーム画面とゲーム画面の切り替え
         function showGameScreen() {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
-            updateChoices(); // ゲーム画面の初期表示
+            generateChoices(); // ゲーム画面の初期表示
         }
 
         function showHomeScreen() {
@@ -174,7 +173,6 @@
         document.getElementById('choice1').addEventListener('click', () => selectChoice(choices[0]));
         document.getElementById('choice2').addEventListener('click', () => selectChoice(choices[1]));
         document.getElementById('choice3').addEventListener('click', () => selectChoice(choices[2]));
-        document.getElementById('fight-button').addEventListener('click', fight);
 
         // ホームとショップの切り替えボタン
         document.getElementById('start-button').addEventListener('click', showGameScreen);
