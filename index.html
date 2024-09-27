@@ -26,9 +26,18 @@
         #game-screen, #shop-screen {
             display: none; /* ゲーム画面とショップ画面は最初非表示 */
         }
+        #coin-display {
+            position: fixed; /* 固定位置に設定 */
+            top: 10px;
+            right: 10px;
+            font-size: 20px;
+            color: gold;
+        }
     </style>
 </head>
 <body>
+    <div id="coin-display">コイン: <span id="coin-count">10</span></div> <!-- コインの表示 -->
+    
     <div id="home-screen">
         <h1>ホーム画面</h1>
         <p>このゲームで遊んで、10回敵を倒した後に100の敵を倒せば勝利です！</p>
@@ -43,12 +52,7 @@
         <p id="enemy-numbers"></p>
         <p id="message"></p>
         
-        <div>
-            <p>数字を選んでください:</p>
-            <button class="choice" id="choice1"></button>
-            <button class="choice" id="choice2"></button>
-            <button class="choice" id="choice3"></button>
-        </div>
+        <div id="enemy-buttons"></div>
         
         <button id="fight-button" disabled>戦う</button>
     </div>
@@ -57,9 +61,9 @@
         <h1>ショップ</h1>
         <button id="shop-home-button">ホームに戻る</button>
         <p>レベルを上げるアイテムを選んでください:</p>
-        <button class="shop-choice" id="level-up-1">1レベル上げる</button>
-        <button class="shop-choice" id="level-up-3">3レベル上げる</button>
-        <button class="shop-choice" id="level-up-10">10レベル上げる</button>
+        <button class="shop-choice" id="level-up-1">1レベル上げる（10コイン）</button>
+        <button class="shop-choice" id="level-up-3">3レベル上げる（25コイン）</button>
+        <button class="shop-choice" id="level-up-10">10レベル上げる（80コイン）</button>
         <p id="shop-message"></p>
     </div>
 
@@ -70,6 +74,8 @@
         let enemies = []; // 敵の配列
         let finalEnemyAppeared = false; // 100の敵が出現したかどうか
         let choices = []; // プレイヤーの選択肢
+        let selectedEnemyLevel = null; // 選択した敵のレベル
+        let coinCount = 10; // プレイヤーのコイン数
 
         // 敵を生成する関数
         function generateEnemies() {
@@ -77,48 +83,42 @@
             enemies.push(playerLevel + 1); // 強い敵1
             enemies.push(playerLevel + 2); // 強い敵2
             enemies.push(playerLevel - 1); // 弱い敵
-            updateEnemyDisplay();
+            updateEnemyButtons();
         }
 
-        // 敵の表示を更新する関数
-        function updateEnemyDisplay() {
-            document.getElementById('enemy-numbers').innerHTML = enemies.map((level, index) => `敵${index + 1}のレベル: ${level}`).join('<br>');
+        // 敵のボタンを更新する関数
+        function updateEnemyButtons() {
+            const enemyButtonsDiv = document.getElementById('enemy-buttons');
+            enemyButtonsDiv.innerHTML = ''; // ボタンをクリア
+            
+            enemies.forEach((level, index) => {
+                const button = document.createElement('button');
+                button.textContent = `敵${index + 1}（レベル ${level}）`;
+                button.classList.add('enemy-button');
+                button.addEventListener('click', () => selectEnemy(level)); // 敵を選ぶためのイベントを追加
+                enemyButtonsDiv.appendChild(button);
+            });
         }
 
-        // プレイヤーの選択肢を生成（1〜5からランダムに3つ）
-        function generateChoices() {
-            choices = [];
-            while (choices.length < 3) {
-                let randomChoice = Math.floor(Math.random() * 5) + 1;
-                if (!choices.includes(randomChoice)) {
-                    choices.push(randomChoice);
-                }
-            }
-            updateChoices();
-        }
-
-        // 選択肢を画面に表示
-        function updateChoices() {
-            document.getElementById('choice1').textContent = `レベル ${choices[0]}`;
-            document.getElementById('choice2').textContent = `レベル ${choices[1]}`;
-            document.getElementById('choice3').textContent = `レベル ${choices[2]}`;
-            generateEnemies(); // 敵を生成
+        // 敵を選んだ時の処理
+        function selectEnemy(enemyLevel) {
+            selectedEnemyLevel = enemyLevel; // 選んだ敵のレベルを保存
+            document.getElementById('fight-button').disabled = false; // 戦うボタンを有効にする
         }
 
         // ゲームのロジック
-        function fight(selectedChoice) {
+        function fight() {
             let message = '';
 
             // 敵と戦う
-            for (let enemyLevel of enemies) {
-                if (playerLevel > enemyLevel) {
-                    message += `敵（レベル ${enemyLevel}）に勝ちました！<br>`;
-                    playerLevel += enemyLevel; // 敵に勝ったら、プレイヤーのレベルが増える
-                } else if (playerLevel === enemyLevel) {
-                    message += `敵（レベル ${enemyLevel}）と同じレベルだったので負けました。<br>`;
-                } else {
-                    message += `敵（レベル ${enemyLevel}）に負けました。<br>`;
-                }
+            if (playerLevel > selectedEnemyLevel) {
+                message = `敵（レベル ${selectedEnemyLevel}）に勝ちました！<br>`;
+                playerLevel += selectedEnemyLevel; // 敵に勝ったら、プレイヤーのレベルが増える
+                coinCount += 5; // 勝ったらコインが5増える
+            } else if (playerLevel === selectedEnemyLevel) {
+                message = `敵（レベル ${selectedEnemyLevel}）と同じレベルだったので負けました。<br>`;
+            } else {
+                message = `敵（レベル ${selectedEnemyLevel}）に負けました。<br>`;
             }
 
             // 10回勝った後、100の敵を出現させる
@@ -128,26 +128,22 @@
                 message += ' 最後の敵「レベル100」が現れました！';
             } else if (finalEnemyAppeared && playerLevel > 100) {
                 message += `レベル100の敵を倒しました！ゲームクリア！`;
-                document.getElementById('fight-button').disabled = true;
+                document.getElementById('fight-button').disabled = true; // ゲームクリアしたらボタンを無効にする
             }
 
             // メッセージとプレイヤーのレベルの更新
             document.getElementById('player-number').textContent = `レベル ${playerLevel}`;
             document.getElementById('message').innerHTML = message;
-            generateChoices(); // 戦った後に新しい選択肢を生成
-        }
-
-        // 数字を選んだ時の処理
-        function selectChoice(choice) {
-            // プレイヤーが選んだ数字と敵と戦う
-            fight(choice);
+            document.getElementById('coin-count').textContent = coinCount; // コインの表示を更新
+            generateEnemies(); // 戦った後に新しい敵を生成
+            document.getElementById('fight-button').disabled = true; // 戦った後は戦うボタンを無効にする
         }
 
         // ホーム画面とゲーム画面の切り替え
         function showGameScreen() {
             document.getElementById('home-screen').style.display = 'none';
             document.getElementById('game-screen').style.display = 'block';
-            generateChoices(); // ゲーム画面の初期表示
+            generateEnemies(); // ゲーム画面の初期表示
         }
 
         function showHomeScreen() {
@@ -163,17 +159,19 @@
         }
 
         // アイテムを使用したときの処理
-        function levelUp(level) {
-            playerLevel += level; // プレイヤーのレベルを上げる
-            document.getElementById('player-number').textContent = `レベル ${playerLevel}`;
-            document.getElementById('shop-message').textContent = `レベルが${level}上がりました！`;
+        function levelUp(level, cost) {
+            if (coinCount >= cost) {
+                playerLevel += level; // プレイヤーのレベルを上げる
+                coinCount -= cost; // コインを消費
+                document.getElementById('player-number').textContent = `レベル ${playerLevel}`;
+                document.getElementById('coin-count').textContent = coinCount; // コインの表示を更新
+                document.getElementById('shop-message').textContent = `レベルが${level}上がりました！`;
+            } else {
+                document.getElementById('shop-message').textContent = `コインが足りません！`;
+            }
         }
 
         // ボタンにイベントを設定
-        document.getElementById('choice1').addEventListener('click', () => selectChoice(choices[0]));
-        document.getElementById('choice2').addEventListener('click', () => selectChoice(choices[1]));
-        document.getElementById('choice3').addEventListener('click', () => selectChoice(choices[2]));
-
         // ホームとショップの切り替えボタン
         document.getElementById('start-button').addEventListener('click', showGameScreen);
         document.getElementById('shop-button').addEventListener('click', showShopScreen);
@@ -181,9 +179,12 @@
         document.getElementById('shop-home-button').addEventListener('click', showHomeScreen);
 
         // ショップのアイテムにイベントを設定
-        document.getElementById('level-up-1').addEventListener('click', () => levelUp(1));
-        document.getElementById('level-up-3').addEventListener('click', () => levelUp(3));
-        document.getElementById('level-up-10').addEventListener('click', () => levelUp(10));
+        document.getElementById('level-up-1').addEventListener('click', () => levelUp(1, 10));
+        document.getElementById('level-up-3').addEventListener('click', () => levelUp(3, 25));
+        document.getElementById('level-up-10').addEventListener('click', () => levelUp(10, 80));
+        
+        // 戦うボタンにイベントを設定
+        document.getElementById('fight-button').addEventListener('click', fight);
     </script>
 </body>
 </html>
