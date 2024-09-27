@@ -1,43 +1,76 @@
-// 初期設定
-let playerNumber = 5;
-let fightCount = 0;
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>数字バトルゲーム</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin-top: 50px;
+        }
+        #message {
+            font-size: 18px;
+            margin-top: 20px;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+        }
+    </style>
+</head>
+<body>
+    <h1>数字バトルゲーム</h1>
+    <p>プレイヤーの数字: <span id="player-number">5</span></p>
+    <p>敵の数字: <span id="enemy-number">???</span></p>
+    <p id="message"></p>
+    <button id="fight-button">戦う</button>
 
-// 敵の数字をランダムで生成
-function generateEnemyNumber() {
-    return Math.floor(Math.random() * 5) + 1;
-}
+    <script>
+        // 初期設定
+        let playerNumber = 5;
+        let fightCount = 0;
 
-// ゲームのロジック
-function fight() {
-    let enemyNumber = generateEnemyNumber();
-    document.getElementById('enemy-number').textContent = enemyNumber;
+        // 敵の数字をランダムで生成
+        function generateEnemyNumber() {
+            return Math.floor(Math.random() * 5) + 1;
+        }
 
-    let message = '';
+        // ゲームのロジック
+        function fight() {
+            let enemyNumber = generateEnemyNumber();
+            document.getElementById('enemy-number').textContent = enemyNumber;
 
-    // 勝敗判定
-    if (playerNumber > enemyNumber) {
-        playerNumber += enemyNumber; // 敵に勝ったら、プレイヤーの数字が増える
-        message = `勝ちました！プレイヤーの数字が${enemyNumber}増えて、${playerNumber}になりました。`;
-    } else if (playerNumber === enemyNumber) {
-        message = `同じ数字だったので負けました。`;
-    } else {
-        message = `プレイヤーの数字が大きいので負けました。`;
-    }
+            let message = '';
 
-    // 勝利カウント
-    fightCount++;
-    if (playerNumber >= 100) {
-        message = `ゲームクリア！プレイヤーは100以上になりました！`;
-        document.getElementById('fight-button').disabled = true;
-    } else if (fightCount >= 10) {
-        message += ' 10回戦いました。ゲーム終了です！';
-        document.getElementById('fight-button').disabled = true;
-    }
+            // 勝敗判定
+            if (playerNumber > enemyNumber) {
+                playerNumber += enemyNumber; // 敵に勝ったら、プレイヤーの数字が増える
+                message = `勝ちました！プレイヤーの数字が${enemyNumber}増えて、${playerNumber}になりました。`;
+            } else if (playerNumber === enemyNumber) {
+                message = `同じ数字だったので負けました。`;
+            } else {
+                message = `プレイヤーの数字が大きいので負けました。`;
+            }
 
-    // メッセージ更新
-    document.getElementById('player-number').textContent = playerNumber;
-    document.getElementById('message').textContent = message;
-}
+            // 勝利カウント
+            fightCount++;
+            if (playerNumber >= 100) {
+                message = `ゲームクリア！プレイヤーは100以上になりました！`;
+                document.getElementById('fight-button').disabled = true;
+            } else if (fightCount >= 10) {
+                message += ' 10回戦いました。ゲーム終了です！';
+                document.getElementById('fight-button').disabled = true;
+            }
 
-// ボタンにイベントを設定
-document.getElementById('fight-button').addEventListener('click', fight);
+            // メッセージ更新
+            document.getElementById('player-number').textContent = playerNumber;
+            document.getElementById('message').textContent = message;
+        }
+
+        // ボタンにイベントを設定
+        document.getElementById('fight-button').addEventListener('click', fight);
+    </script>
+</body>
+</html>
