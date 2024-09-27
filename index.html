@@ -24,7 +24,7 @@
             cursor: pointer;
         }
         #game-screen, #shop-screen {
-            display: none; /* ゲーム画面は最初非表示 */
+            display: none; /* ゲーム画面とショップ画面は最初非表示 */
         }
     </style>
 </head>
@@ -39,7 +39,7 @@
     <div id="game-screen">
         <h1>数字バトルゲーム</h1>
         <button id="home-button">ホーム</button>
-        <p>プレイヤーのレベル: <span id="player-number">レベル ???</span></p>
+        <p>プレイヤーのレベル: <span id="player-number">レベル 5</span></p>
         <p id="enemy-numbers"></p>
         <p id="message"></p>
         
@@ -65,7 +65,7 @@
 
     <script>
         // 初期設定
-        let playerLevel = 0;
+        let playerLevel = 5; // プレイヤーの初期レベル
         let fightCount = 0;
         let enemies = []; // 敵の配列
         let finalEnemyAppeared = false; // 100の敵が出現したかどうか
@@ -74,15 +74,9 @@
         // 敵を生成する関数
         function generateEnemies() {
             enemies = [];
-            if (playerLevel > 1) {
-                enemies.push(playerLevel + 1); // 強い敵1
-                enemies.push(playerLevel + 2); // 強い敵2
-                enemies.push(playerLevel - 1); // 弱い敵
-            } else {
-                enemies.push(playerLevel + 1); // 強い敵1
-                enemies.push(playerLevel + 2); // 強い敵2
-                enemies.push(1); // レベル1の弱い敵
-            }
+            enemies.push(playerLevel + 1); // 強い敵1
+            enemies.push(playerLevel + 2); // 強い敵2
+            enemies.push(playerLevel - 1); // 弱い敵
             updateEnemyDisplay();
         }
 
