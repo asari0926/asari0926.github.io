@@ -86,7 +86,6 @@
     <div id="game-screen">
         <h1>数字バトルゲーム</h1>
         <p id="message"></p>
-        <div id="enemy-buttons"></div>
         <button id="fight-button" disabled>戦う</button>
         <button id="home-button-during-battle">ホームに戻る</button>
         <div id="game-over-message">ゲームオーバー！</div>
@@ -106,6 +105,7 @@
         <h1>クエスト</h1>
         <button id="quest-home-button">ホームに戻る</button>
         <div id="quest-list"></div>
+        <button id="quest-complete-button">完了</button>
     </div>
 
     <script>
@@ -116,6 +116,7 @@
         let enemies = [];
         let selectedEnemyLevel = null;
         let gameOver = false;
+        let questCompleted = false;
 
         // ローカルストレージから名前とゲームデータを取得
         function loadGameData() {
@@ -147,6 +148,7 @@
             loadGameData();
             generateEnemies();
             updateCoinDisplay();
+            setupQuests();
         }
 
         // 敵を生成する
@@ -156,25 +158,6 @@
                 let enemyLevel = Math.floor(Math.random() * 10) + 1;
                 enemies.push(enemyLevel);
             }
-            displayEnemies();
-        }
-
-        // 敵を表示する
-        function displayEnemies() {
-            const enemyButtons = document.getElementById('enemy-buttons');
-            enemyButtons.innerHTML = '';
-            enemies.forEach(level => {
-                const button = document.createElement('button');
-                button.textContent = `レベル ${level}`;
-                button.onclick = () => selectEnemy(level);
-                enemyButtons.appendChild(button);
-            });
-        }
-
-        // 敵を選んだ時の処理
-        function selectEnemy(enemyLevel) {
-            selectedEnemyLevel = enemyLevel;
-            document.getElementById('fight-button').disabled = false;
         }
 
         // 戦う処理
@@ -182,17 +165,17 @@
 
         function fight() {
             let message = '';
-            if (playerLevel > selectedEnemyLevel) {
-                message = `敵（レベル ${selectedEnemyLevel}）に勝ちました！`;
+            const selectedEnemy = enemies[Math.floor(Math.random() * enemies.length)];
+            if (playerLevel > selectedEnemy) {
+                message = `敵（レベル ${selectedEnemy}）に勝ちました！`;
                 playerLevel += 1;  // 勝った場合レベルを1上げる
                 coinCount += 5;
             } else {
-                message = `敵（レベル ${selectedEnemyLevel}）に負けました。`;
+                message = `敵（レベル ${selectedEnemy}）に負けました。`;
                 endGame();
             }
             document.getElementById('message').textContent = message;
             updateCoinDisplay();
-            generateEnemies();
             document.getElementById('player-level-display').textContent = `レベル ${playerLevel}`; // レベル表示を更新
         }
 
@@ -255,6 +238,31 @@
                 }
             });
         });
+
+        // クエストの内容を設定する
+        function setupQuests() {
+            const quests = [
+                "クエスト1: 敵を1匹倒す",
+                "クエスト2: 敵を2匹倒す",
+                "クエスト3: 敵を3匹倒す",
+            ];
+
+            const questList = document.getElementById('quest-list');
+            questList.innerHTML = ''; // リストをクリア
+
+            quests.forEach((quest, index) => {
+                const questDiv = document.createElement('div');
+                questDiv.className = 'quest';
+                questDiv.textContent = quest;
+                questList.appendChild(questDiv);
+            });
+
+            // 完了ボタンの機能
+            document.getElementById('quest-complete-button').addEventListener('click', () => {
+                questCompleted = true;
+                document.getElementById('quest-list').innerHTML = '<p>クエストが完了しました！</p>';
+            });
+        }
 
         // 初期画面の表示
         document.getElementById('name-input-screen').style.display = 'block'; // 名前入力画面を表示
