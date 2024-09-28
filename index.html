@@ -257,7 +257,7 @@
             questListDiv.innerHTML = ''; // リストをクリア
             for (const [questKey, quest] of Object.entries(quests)) {
                 const questDiv = document.createElement('div');
-                questDiv.textContent = `${questKey}クエスト: レベル ${quest.level} - 報酬 ${quest.reward}コイン`;
+                questDiv.textContent = `${questKey}クエスト: レベル ${quest.level} を倒せ - 報酬 ${quest.reward}コイン`;
                 
                 if (!quest.completed) {
                     const completeButton = document.createElement('button');
