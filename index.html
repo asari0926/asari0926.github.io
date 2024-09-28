@@ -88,6 +88,7 @@
         <p id="message"></p>
         <div id="enemy-buttons"></div>
         <button id="fight-button" disabled>戦う</button>
+        <button id="home-button-during-battle">ホームに戻る</button>
         <div id="game-over-message">ゲームオーバー！</div>
     </div>
 
@@ -183,7 +184,7 @@
             let message = '';
             if (playerLevel > selectedEnemyLevel) {
                 message = `敵（レベル ${selectedEnemyLevel}）に勝ちました！`;
-                playerLevel += 1;
+                playerLevel += 1;  // 勝った場合レベルを1上げる
                 coinCount += 5;
             } else {
                 message = `敵（レベル ${selectedEnemyLevel}）に負けました。`;
@@ -192,6 +193,7 @@
             document.getElementById('message').textContent = message;
             updateCoinDisplay();
             generateEnemies();
+            document.getElementById('player-level-display').textContent = `レベル ${playerLevel}`; // レベル表示を更新
         }
 
         // ゲームオーバーの処理
@@ -233,7 +235,28 @@
             document.getElementById('home-screen').style.display = 'block';
         });
 
-        // 最初の画面表示
+        document.getElementById('home-button-during-battle').addEventListener('click', () => {
+            document.getElementById('game-screen').style.display = 'none';
+            document.getElementById('home-screen').style.display = 'block';
+        });
+
+        // ショップでレベルを上げる処理
+        document.querySelectorAll('.shop-choice').forEach(button => {
+            button.addEventListener('click', (event) => {
+                const cost = parseInt(event.target.textContent.match(/\d+/)[0]); // ボタンのコストを取得
+                if (coinCount >= cost) {
+                    coinCount -= cost;
+                    playerLevel += parseInt(event.target.id.split('-')[2]); // レベルアップ
+                    updateCoinDisplay();
+                    document.getElementById('player-level-display').textContent = `レベル ${playerLevel}`;
+                    document.getElementById('shop-message').textContent = `レベルが ${parseInt(event.target.id.split('-')[2])} 上がりました！`;
+                } else {
+                    document.getElementById('shop-message').textContent = 'コインが足りません！';
+                }
+            });
+        });
+
+        // 初期画面の表示
         document.getElementById('name-input-screen').style.display = 'block'; // 名前入力画面を表示
         loadGameData(); // ゲームデータを読み込む
     </script>
