@@ -187,7 +187,7 @@
                 playerLevel += selectedEnemyLevel; // 敵に勝ったら、プレイヤーのレベルが増える
                 coinCount += 5; // コインを5増やす
             } else {
-                message = `敵（レベル ${selectedEnemyLevel}）に負けました。<br>`;
+                message = `敵（レベル ${selectedEnemyLevel}）に負けました！<br>`;
                 gameOver = true; // ゲームオーバーに設定
             }
 
@@ -275,11 +275,20 @@
         function completeQuest(questKey) {
             const quest = quests[questKey];
             if (!quest.completed) {
-                quest.completed = true; // クエストを完了に設定
-                coinCount += quest.reward; // 報酬を追加
-                document.getElementById('coin-count').textContent = coinCount; // コイン数を更新
-                updateQuestList(); // クエストリストを更新
-                alert(`${questKey}クエストをクリアしました！報酬: ${quest.reward}コイン`); // アラート表示
+                // クエストの条件を確認
+                if (questKey === 'C' && (fightCount >= 1 && coinCount >= 5 && playerLevel >= 10) || 
+                    questKey === 'B' && fightCount >= 1 && playerLevel >= 100 || 
+                    questKey === 'A' && fightCount >= 1 && playerLevel >= 1000 || 
+                    questKey === 'S' && fightCount >= 1 && playerLevel >= 5000) {
+                    
+                    quest.completed = true; // クエストを完了に設定
+                    coinCount += quest.reward; // 報酬を追加
+                    document.getElementById('coin-count').textContent = coinCount; // コイン数を更新
+                    updateQuestList(); // クエストリストを更新
+                    alert(`${questKey}クエストをクリアしました！報酬: ${quest.reward}コイン`); // アラート表示
+                } else {
+                    alert(`${questKey}クエストの条件が満たされていません。`); // 条件未達のメッセージ
+                }
             } else {
                 alert(`${questKey}クエストは既に完了しています。`); // 完了済みのメッセージ
             }
