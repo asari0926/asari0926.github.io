@@ -9,6 +9,7 @@
             font-family: Arial, sans-serif;
             text-align: center;
             margin-top: 50px;
+            background-color: #f0f8ff; /* 薄い青色の背景 */
         }
         #message {
             font-size: 18px;
@@ -20,6 +21,10 @@
             border-radius: 12px; /* 丸っこいボタン */
             border: none; /* ボーダーをなしにする */
             cursor: pointer; /* カーソルをポインターに */
+            transition: background-color 0.3s; /* ホバー時のアニメーション */
+        }
+        button:hover {
+            opacity: 0.8; /* ホバー時の透過効果 */
         }
         button#fight-button {
             background-color: red; /* 赤色の背景 */
@@ -28,10 +33,12 @@
         .enemy-button {
             background-color: #ffcccb; /* 淡い赤色 */
             margin: 5px;
+            color: black;
         }
         .shop-choice {
             background-color: #add8e6; /* 淡い青色 */
             margin: 5px;
+            color: black;
         }
         #game-screen, #shop-screen, #quest-screen, #name-screen {
             display: none; /* 各画面は最初非表示 */
@@ -57,6 +64,12 @@
         }
         #quest-list {
             text-align: left; /* 左揃えにする */
+        }
+        .quest-item {
+            background-color: #90ee90; /* 淡い緑色 */
+            margin: 5px;
+            padding: 10px;
+            border-radius: 10px; /* 丸っこいボーダー */
         }
     </style>
 </head>
@@ -142,8 +155,6 @@
             if (savedName) {
                 playerName = savedName;
                 document.getElementById('display-player-name').textContent = playerName;
-                document.getElementById('home-screen').style.display = 'block';
-                // 以前のゲームデータを取得して表示
                 playerLevel = Number(localStorage.getItem('playerLevel')) || 5;
                 coinCount = Number(localStorage.getItem('coinCount')) || 10;
                 currentQuestIndex = Number(localStorage.getItem('currentQuestIndex')) || 0;
@@ -179,16 +190,16 @@
 
         // 敵を選んだ時の処理
         function selectEnemy(enemyLevel) {
-            selectedEnemyLevel = enemyLevel; // 選んだ敵のレベルを保存
+            selectedEnemyLevel = enemyLevel;
             document.getElementById('fight-button').disabled = false; // 戦うボタンを有効にする
         }
 
-        // ゲームのロジック
+        // 戦う処理
         function fight() {
-            let message = '';
+            let message;
+            const successChance = Math.random(); // 成功する確率
 
-            // 敵と戦う
-            if (playerLevel > selectedEnemyLevel) {
+            if (successChance > 0.5) { // 勝つ確率を50%に設定
                 message = `敵（レベル ${selectedEnemyLevel}）に勝ちました！<br>`;
                 playerLevel += Math.floor(selectedEnemyLevel / 10); // 敵に勝ったら、プレイヤーのレベルが増える
                 coinCount += 5; // 勝ったらコインが5増える
@@ -244,6 +255,7 @@
 
             quests.forEach((quest, index) => {
                 const questItem = document.createElement('div');
+                questItem.className = 'quest-item'; // クエストアイテムにクラスを追加
                 questItem.textContent = `${quest.title} - ${quest.completed ? 'クリア済み' : `残り戦闘回数: ${quest.limit - fightCount}`}`;
                 questListDiv.appendChild(questItem);
             });
