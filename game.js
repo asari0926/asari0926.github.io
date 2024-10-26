@@ -1,13 +1,13 @@
 // プレイヤーと敵のHPおよびMPの初期値
 let playerHp = 100;
-let playerMp = 1000;
+let playerMp = 100;
 let enemyHp = 50;
 
 // 呪文のダメージとMPコスト設定
 const spells = {
-  fire: { damage: 30, mpCost: 5 },
-  water: { damage: 20, mpCost: 5 },
-  thunder: { damage: 15, mpCost: 5 }
+  fire: { damage: 30, mpCost: 50 },
+  water: { damage: 20, mpCost: 30 },
+  thunder: { damage: 15, mpCost: 15 }
 };
 
 // ボタンにイベントリスナーを追加して呪文を発動
