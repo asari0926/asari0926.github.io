@@ -10,6 +10,17 @@ const spells = {
   thunder: { damage: 15, mpCost: 5 }
 };
 
+// ボタンにイベントリスナーを追加して呪文を発動
+document.getElementById("fire-button").addEventListener("click", function() {
+  castSpell("fire");
+});
+document.getElementById("water-button").addEventListener("click", function() {
+  castSpell("water");
+});
+document.getElementById("thunder-button").addEventListener("click", function() {
+  castSpell("thunder");
+});
+
 // 呪文を唱える関数
 function castSpell(spell) {
   // MPが足りない場合のチェック
@@ -56,4 +67,3 @@ function disableButtons() {
     button.disabled = true;
   });
 }
-
