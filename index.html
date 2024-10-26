@@ -39,11 +39,11 @@
       box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
     }
 
-    /* HPのスタイル */
-    #player-hp, #enemy-hp {
+    /* HPとMPのスタイル */
+    #player-hp, #player-mp, #enemy-hp {
       font-size: 1.5em;
-      color: #ff9e9e;
       font-weight: bold;
+      color: #ff9e9e;
     }
 
     /* 呪文ボタンエリア */
@@ -86,6 +86,7 @@
 
   <div id="player">
     <p><strong>プレイヤーのHP: <span id="player-hp">100</span></strong></p>
+    <p><strong>プレイヤーのMP: <span id="player-mp">1000</span></strong></p>
   </div>
 
   <div id="enemy">
@@ -94,7 +95,9 @@
 
   <div id="spell-buttons">
     <h3>呪文を選んで攻撃しよう！</h3>
-    <button id="fight-button">戦う！</button>
+    <button onclick="castSpell('fire')">炎の呪文</button>
+    <button onclick="castSpell('water')">水の呪文</button>
+    <button onclick="castSpell('thunder')">雷の呪文</button>
   </div>
 
   <p id="message"></p>
