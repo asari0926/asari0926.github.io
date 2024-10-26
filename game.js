@@ -56,3 +56,4 @@ function disableButtons() {
     button.disabled = true;
   });
 }
+
