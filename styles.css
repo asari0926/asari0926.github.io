@@ -1,16 +1,108 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数字バトルゲーム</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魔法の学校</title>
+  <style>
+    /* 全体の背景 */
+    body {
+      font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(to bottom, #3e0d57, #1f1b4d);
+      color: #f5e1ff;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      justify-content: center;
+    }
+
+    /* ゲームタイトル */
+    h1 {
+      font-size: 2.5em;
+      color: #ffdbac;
+      margin-bottom: 20px;
+      text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.6);
+    }
+
+    /* プレイヤーと敵のHPエリア */
+    #player, #enemy {
+      background-color: rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 15px;
+      width: 80%;
+      max-width: 400px;
+      margin: 10px auto;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    /* HPのスタイル */
+    #player-hp, #enemy-hp {
+      font-size: 1.5em;
+      color: #ff9e9e;
+      font-weight: bold;
+    }
+
+    /* 呪文ボタンエリア */
+    #spell-buttons {
+      margin-top: 20px;
+    }
+
+    /* 呪文ボタンのスタイル */
+    #spell-buttons button {
+      padding: 10px 20px;
+      font-size: 1.1em;
+      color: #fff;
+      background-color: #6200ea;
+      border: none;
+      border-radius: 8px;
+      margin: 5px;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+
+    /* ボタンのホバー効果 */
+    #spell-buttons button:hover {
+      background-color: #bb86fc;
+      transform: scale(1.05);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+    }
+
+    /* メッセージのスタイル */
+    #message {
+      font-size: 1.2em;
+      color: #d7a7ff;
+      margin-top: 20px;
+    }
+
+  </style>
 </head>
 <body>
-    <h1>数字バトルゲーム</h1>
-    <p>プレイヤーの数字: <span id="player-number">5</span></p>
-    <p>敵の数字: <span id="enemy-number"></span></p>
-    <p id="message"></p>
-    <button id="fight-button">戦う</button>
-    <script src="game.js"></script>
+
+  <h1>魔法の学校へようこそ！</h1>
+
+  <div id="player">
+    <p><strong>プレイヤーのHP: <span id="player-hp">100</span></strong></p>
+  </div>
+
+  <div id="enemy">
+    <p><strong>敵のHP: <span id="enemy-hp">50</span></strong></p>
+  </div>
+
+  <div id="spell-buttons">
+    <h3>呪文を選んで攻撃しよう！</h3>
+    <button onclick="castSpell('fire')">炎の呪文</button>
+    <button onclick="castSpell('water')">水の呪文</button>
+    <button onclick="castSpell('thunder')">雷の呪文</button>
+  </div>
+
+  <p id="message"></p>
+
+  <script src="game.js"></script>
+
 </body>
 </html>
