@@ -1,297 +1,52 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>数字バトルゲーム</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            text-align: center;
-            margin-top: 50px;
-            background-color: #f0f8ff;
-            color: #333;
-        }
-        #message {
-            font-size: 18px;
-            margin-top: 20px;
-            color: #444;
-        }
-        button {
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 15px;
-            border: none;
-            background-color: #007BFF;
-            color: white;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-        .choice {
-            margin: 10px;
-            font-size: 20px;
-            cursor: pointer;
-        }
-        #game-screen, #shop-screen, #quest-screen {
-            display: none;
-        }
-        #coin-display {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            font-size: 20px;
-            color: gold;
-        }
-        #level-display {
-            position: fixed;
-            top: 10px;
-            right: 150px;
-            font-size: 20px;
-            color: #007BFF;
-        }
-        #game-over-message {
-            display: none;
-            font-size: 48px;
-            color: red;
-            margin-top: 100px;
-        }
-        #home-button {
-            display: inline-block;
-        }
-        .enemy-button {
-            margin: 10px;
-            padding: 10px 20px;
-            font-size: 16px;
-            border-radius: 10px;
-            background-color: #28a745;
-            color: white;
-        }
-        .enemy-button:hover {
-            background-color: #218838;
-        }
-        #shop-home-button, #quest-home-button {
-            background-color: #ffc107;
-        }
-        #shop-home-button:hover, #quest-home-button:hover {
-            background-color: #e0a800;
-        }
-        #fight-button {
-            background-color: #dc3545;
-        }
-        #fight-button:hover {
-            background-color: #c82333;
-        }
-        .quest-complete {
-            margin-top: 20px;
-            font-size: 18px;
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>魔法の学校</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+    }
+    #enemy, #player {
+      font-size: 1.2em;
+      margin: 20px;
+    }
+    #spell-buttons button {
+      padding: 10px;
+      font-size: 1em;
+      margin: 10px;
+      cursor: pointer;
+    }
+  </style>
 </head>
 <body>
-    <div id="coin-display">コイン: <span id="coin-count">10</span></div>
-    <div id="level-display">レベル: <span id="player-number">5</span></div>
 
-    <div id="home-screen">
-        <h1>ホーム画面</h1>
-        <p>このゲームで敵に倒されずクエストをクリアしましょう！</p>
-        <button id="start-button">戦う</button>
-        <button id="shop-button">ショップ</button>
-        <button id="quest-button">クエスト</button>
-    </div>
+  <h1>魔法の学校へようこそ！</h1>
 
-    <div id="game-screen">
-        <h1>戦闘画面</h1>
-        <button id="home-button" onclick="showHome()">ホーム</button>
-        <p id="enemy-numbers"></p>
-        <p id="message"></p>
+  <div id="player">
+    <p><strong>プレイヤーのHP: <span id="player-hp">100</span></strong></p>
+  </div>
 
-        <div id="enemy-buttons"></div>
+  <div id="enemy">
+    <p><strong>敵のHP: <span id="enemy-hp">50</span></strong></p>
+  </div>
 
-        <button id="fight-button" disabled>戦う</button>
-        <div id="game-over-message">ゲームオーバー！</div>
-    </div>
+  <div id="spell-buttons">
+    <h3>呪文を選んで攻撃しよう！</h3>
+    <button onclick="castSpell('fire')">炎の呪文</button>
+    <button onclick="castSpell('water')">水の呪文</button>
+    <button onclick="castSpell('thunder')">雷（かみなり）の呪文</button>
+  </div>
 
-    <div id="shop-screen">
-        <h1>ショップ</h1>
-        <button id="shop-home-button" onclick="showHome()">ホームに戻る</button>
-        <p>レベルを上げるアイテムを選んでください:</p>
-        <button class="shop-choice" id="level-up-1">1レベル上げる（10コイン）</button>
-        <button class="shop-choice" id="level-up-3">3レベル上げる（25コイン）</button>
-        <button class="shop-choice" id="level-up-10">10レベル上げる（80コイン）</button>
-        <p id="shop-message"></p>
-    </div>
+  <p id="message"></p>
 
-    <div id="quest-screen">
-        <h1>クエスト画面</h1>
-        <button id="quest-home-button" onclick="showHome()">ホームに戻る</button>
-        <p>クエストを選んで挑戦しよう！</p>
-        <div id="quest-list"></div>
-    </div>
+  <script src="game.js"></script>
 
-    <script>
-        let playerLevel = 5;
-        let fightCount = 0;
-        let enemies = [];
-        let selectedEnemyLevel = null;
-        let coinCount = 10;
-        let questsCompleted = { A: false, B: false, C: false, S: false };
-        let gameOver = false;
+</body>
+</html>
 
-        const quests = {
-            C: { level: 10, reward: 50, completed: false, criteria: "敵を1体倒せ" },
-            B: { level: 100, reward: 100, completed: false, criteria: "レベル100の敵を1体倒せ" },
-            A: { level: 1000, reward: 1000, completed: false, criteria: "レベル1000以上の敵を倒せ" },
-            S: { level: 5000, reward: 1000, completed: false, criteria: "レベル5000以上の敵を倒せ" },
-        };
-
-        function generateEnemies() {
-            enemies = [];
-            let easyEnemyLevel = playerLevel - 1;
-            enemies.push(easyEnemyLevel);
-
-            for (let i = 1; i < 3; i++) {
-                let enemyLevel = Math.floor(Math.random() * 5000) + 1;
-                enemies.push(enemyLevel);
-            }
-            updateEnemyButtons();
-        }
-
-        function updateEnemyButtons() {
-            const enemyButtonsDiv = document.getElementById('enemy-buttons');
-            enemyButtonsDiv.innerHTML = '';
-            
-            enemies.forEach((level, index) => {
-                const button = document.createElement('button');
-                button.textContent = `敵${index + 1}（レベル ${level}）`;
-                button.classList.add('enemy-button');
-                button.addEventListener('click', () => selectEnemy(level));
-                enemyButtonsDiv.appendChild(button);
-            });
-        }
-
-        function selectEnemy(enemyLevel) {
-            selectedEnemyLevel = enemyLevel;
-            document.getElementById('fight-button').disabled = false;
-        }
-
-        function fight() {
-            if (selectedEnemyLevel) {
-                let message;
-                const success = Math.random() < 0.5;
-                if (success) {
-                    message = `敵（レベル ${selectedEnemyLevel}）を倒しました！`;
-                    coinCount += 5;
-                    fightCount++;
-
-                    checkQuestCompletion();
-                } else {
-                    message = `敵（レベル ${selectedEnemyLevel}）に負けました！`;
-                    gameOver = true;
-                    handleGameOver();
-                }
-
-                document.getElementById('message').innerHTML = message;
-                document.getElementById('coin-count').textContent = coinCount;
-                document.getElementById('player-number').textContent = playerLevel;
-
-                if (!gameOver) {
-                    generateEnemies();
-                }
-            }
-        }
-
-        function handleGameOver() {
-            document.getElementById('game-over-message').style.display = 'block';
-            document.getElementById('fight-button').disabled = true;
-            document.getElementById('home-button').disabled = true;
-        }
-
-        function showHome() {
-            gameOver = false;
-            document.getElementById('game-screen').style.display = 'none';
-            document.getElementById('shop-screen').style.display = 'none';
-            document.getElementById('quest-screen').style.display = 'none';
-            document.getElementById('home-screen').style.display = 'block';
-            document.getElementById('game-over-message').style.display = 'none';
-            document.getElementById('message').textContent = '';
-            document.getElementById('fight-button').disabled = true;
-            document.getElementById('home-button').disabled = false;
-        }
-
-        document.getElementById('start-button').addEventListener('click', function() {
-            showHome();
-            document.getElementById('game-screen').style.display = 'block';
-            generateEnemies();
-        });
-
-        document.getElementById('shop-button').addEventListener('click', function() {
-            showHome();
-            document.getElementById('shop-screen').style.display = 'block';
-        });
-
-        document.getElementById('quest-button').addEventListener('click', function() {
-            showHome();
-            document.getElementById('quest-screen').style.display = 'block';
-            updateQuestList();
-        });
-
-        document.querySelectorAll('.shop-choice').forEach(button => {
-            button.addEventListener('click', function() {
-                const cost = parseInt(this.id.split('-').pop(), 10);
-                if (coinCount >= cost) {
-                    coinCount -= cost;
-                    playerLevel += parseInt(this.id.split('-')[2], 10);
-                    document.getElementById('coin-count').textContent = coinCount;
-                    document.getElementById('shop-message').textContent = `レベルが上がりました！現在のレベル: ${playerLevel}`;
-                    document.getElementById('player-number').textContent = playerLevel;
-                } else {
-                    document.getElementById('shop-message').textContent = 'コインが足りません！';
-                }
-            });
-        });
-
-        function updateQuestList() {
-            const questListDiv = document.getElementById('quest-list');
-            questListDiv.innerHTML = '';
-            for (const [questKey, quest] of Object.entries(quests)) {
-                const questDiv = document.createElement('div');
-                questDiv.textContent = `${questKey}クエスト: ${quest.criteria} - 報酬 ${quest.reward}コイン`;
-                
-                if (!quest.completed) {
-                    const completeButton = document.createElement('button');
-                    completeButton.textContent = 'クエストクリア';
-                    completeButton.addEventListener('click', () => completeQuest(questKey));
-                    questDiv.appendChild(completeButton);
-                } else {
-                    questDiv.textContent += ' (完了)';
-                }
-                questListDiv.appendChild(questDiv);
-            }
-        }
-
-        function completeQuest(questKey) {
-            const quest = quests[questKey];
-            if (!quest.completed) {
-                if (questKey === 'C' && fightCount >= 1 && coinCount >= 5 && playerLevel >= 10 || 
-                    questKey === 'B' && fightCount >= 1 && playerLevel >= 100 || 
-                    questKey === 'A' && fightCount >= 1 && playerLevel >= 1000 || 
-                    questKey === 'S' && fightCount >= 1 && playerLevel >= 5000) {
-                    
-                    quest.completed = true;
-                    coinCount += quest.reward;
-                    document.getElementById('coin-count').textContent = coinCount;
-                    updateQuestList();
-                    alert(`${questKey}クエストをクリアしました！報酬: ${quest.reward}コイン`);
-                } else {
-                    alert(`${questKey}クエストの条件が満たされていません。`);
-                }
-            } else {
-                alert(`${questKey}クエストは既に完了しています。`);
-            }
-        }
 
         document.getElementById('fight-button').addEventListener('click', fight);
     </script>
