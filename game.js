@@ -1,6 +1,6 @@
 // プレイヤーと敵のHPおよびMPの初期値
 let playerHp = 100;
-let playerMp = 10000;
+let playerMp = 100;
 let enemyHp = 50;
 
 // 呪文のダメージとMPコスト設定
