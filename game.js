@@ -1,14 +1,14 @@
 // プレイヤーと敵のHPおよびMPの初期値
-let playerHp = 100;
-let playerMp = 1000;
+let playerHp = 200;
+let playerMp = 100;
 let enemyHp = generateEnemyHp(); // 新しい敵のHPを生成
 
 // 呪文と攻撃のダメージとMPコスト設定
 const spells = {
   attack: { damage: 10, mpCost: 0 },
-  fire: { damage: 30, mpCost: 5 },
+  fire: { damage: 30, mpCost: 10 },
   water: { damage: 20, mpCost: 5 },
-  thunder: { damage: 15, mpCost: 5 }
+  thunder: { damage: 15, mpCost: 3 }
 };
 
 // ボタンにイベントリスナーを追加して呪文や攻撃を発動
