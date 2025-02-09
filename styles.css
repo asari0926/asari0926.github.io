@@ -1,1 +1,64 @@
+body {
+    font-family: Arial, sans-serif;
+    background-color: #fdf6e3;
+    text-align: center;
+    padding: 20px;
+}
+
+h1 {
+    color: #d35400;
+    font-size: 24px;
+}
+
+select {
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 20px;
+    border: 2px solid #d35400;
+    background-color: white;
+    cursor: pointer;
+}
+
+table {
+    width: 80%;
+    margin: 20px auto;
+    border-collapse: collapse;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+th, td {
+    padding: 12px;
+    border-bottom: 1px solid #ddd;
+}
+
+th {
+    background-color: #ffcc80;
+    color: #6d4c41;
+}
+
+tr:nth-child(even) {
+    background-color: #fff3e0;
+}
+
+tr:nth-child(odd) {
+    background-color: #ffe0b2;
+}
+
+h2 {
+    margin-top: 20px;
+    font-size: 20px;
+}
+
+#remainingPoints {
+    font-size: 24px;
+    font-weight: bold;
+    color: #d35400;
+    background: #ffcc80;
+    padding: 10px 20px;
+    border-radius: 20px;
+    display: inline-block;
+    margin-top: 10px;
+}
 
