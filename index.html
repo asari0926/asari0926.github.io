@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ポイント管理</title>
-    <link rel="stylesheet" href="styles.css"> 
+    <link rel="stylesheet" href="styles.css"> <!-- 🔹CSSファイルを読み込む -->
 </head>
 <body>
     <h1>ポイント管理システム</h1>
-    
-    <label for="userSelect">誰を選択:</label>
+
+    <label for="userSelect"><strong>誰を選択:</strong></label>
     <select id="userSelect">
         <option value="">選択してください</option>
         <option value="ママ">ママ</option>
@@ -17,7 +17,7 @@
     </select>
 
     <h2>取引履歴</h2>
-    <table border="1">
+    <table>
         <thead>
             <tr>
                 <th>日付</th>
@@ -40,7 +40,7 @@
                 if (!response.ok) throw new Error("データ取得に失敗しました");
 
                 const data = await response.json();
-                console.log("取得したデータ:", data); // ← デバッグ用にデータを出力
+                console.log("取得したデータ:", data);
                 return data;
             } catch (error) {
                 console.error("エラー:", error);
@@ -62,7 +62,7 @@
                 return;
             }
 
-            console.log(`選択されたユーザー: ${selectedUser}`, data[selectedUser]); // ← 追加デバッグ
+            console.log(`選択されたユーザー: ${selectedUser}`, data[selectedUser]);
 
             const userData = data[selectedUser];
 
