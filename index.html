@@ -4,64 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ポイントカードシステム</title>
-    <style>
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            border: 1px solid #ccc;
-            padding: 8px;
-            text-align: left;
-        }
-        th {
-            background-color: #f4f4f4;
-        }
-    </style>
 </head>
 <body>
+
+    <h2>ポイントカードシステム</h2>
     
-<h2>ポイント使用</h2>
-<input type="text" id="userName" placeholder="名前を入力">
-<input type="number" id="usePoints" placeholder="使用するポイント">
-<button onclick="usePoints()">ポイントを使用</button>
-<p id="result"></p>
+    <!-- ユーザー選択 -->
+    <label for="userSelect">誰:</label>
+    <select id="userSelect" onchange="displayUserData()">
+        <option value="">選択してください</option>
+    </select>
 
-<h2>ポイントカード</h2>
-<table id="dataTable">
-    <thead>
-        <tr id="tableHeader"></tr>
-    </thead>
-    <tbody id="tableBody"></tbody>
-</table>
+    <!-- 残りポイント表示 -->
+    <h3>残りポイント: <span id="remainingPoints">-</span></h3>
 
-<script>
-const apiUrl = "https://script.google.com/macros/s/AKfycbydn_ee4WGsGvyjakwo2qNji-izV2S4MhOeDv9JxcfrmmVWMGWoIzRX0v1lRKb6bZKZYg/exec";
+    <!-- 取引履歴 -->
+    <h3>取引履歴</h3>
+    <table border="1">
+        <thead>
+            <tr>
+                <th>日付</th>
+                <th>支払い</th>
+                <th>ポイント</th>
+                <th>ポイント使用</th>
+            </tr>
+        </thead>
+        <tbody id="transactionTable">
+        </tbody>
+    </table>
 
-async function usePoints() {
-    const name = document.getElementById("userName").value;
-    const usedPoints = document.getElementById("usePoints").value;
+    <script>
+        const apiUrl = "【GASのデプロイURL】";
 
-    if (!name || !usedPoints) {
-        alert("名前とポイントを入力してください！");
-        return;
-    }
+        async function fetchData() {
+            const response = await fetch(apiUrl);
+            const data = await response.json();
+            const userSelect = document.getElementById("userSelect");
 
-    const response = await fetch(apiUrl, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ name, usedPoints: Number(usedPoints) })
-    });
+            // 名前のリストをドロップダウンに追加
+            userSelect.innerHTML = '<option value="">選択してください</option>';
+            Object.keys(data).forEach(name => {
+                let option = document.createElement("option");
+                option.value = name;
+                option.textContent = name;
+                userSelect.appendChild(option);
+            });
 
-    const result = await response.json();
-    document.getElementById("result").textContent = result.success
-        ? `新しいポイント: ${result.newPoints}`
-        : "エラー: " + result.message;
+            // 保存
+            window.userData = data;
+        }
 
-    fetchData(); // 最新データを取得（ポイントを減らした後、反映させる）
-}
+        function displayUserData() {
+            const selectedUser = document.getElementById("userSelect").value;
+            const remainingPoints = document.getElementById("remainingPoints");
+            const transactionTable = document.getElementById("transactionTable");
 
-</script>
+            if (!selectedUser || !window.userData[selectedUser]) {
+                remainingPoints.textContent = "-";
+                transactionTable.innerHTML = "";
+                return;
+            }
+
+            const user = window.userData[selectedUser];
+
+            // 残りポイント表示
+            remainingPoints.textContent = user.points;
+
+            // 取引履歴を表示
+            transactionTable.innerHTML = user.transactions.map(trx => `
+                <tr>
+                    <td>${trx.date}</td>
+                    <td>${trx.payment}</td>
+                    <td>${trx.points}</td>
+                    <td>${trx.usedPoints}</td>
+                </tr>
+            `).join("");
+        }
+
+        // 初回データ取得
+        fetchData();
+    </script>
 
 </body>
 </html>
