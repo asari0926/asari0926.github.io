@@ -3,87 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ポイントカードシステム</title>
+    <title>ポイント管理</title>
 </head>
 <body>
-
-    <h2>ポイントカードシステム</h2>
+    <h1>ポイント管理システム</h1>
     
-    <!-- ユーザー選択 -->
-    <label for="userSelect">誰:</label>
-    <select id="userSelect" onchange="displayUserData()">
+    <label for="userSelect">誰を選択:</label>
+    <select id="userSelect">
         <option value="">選択してください</option>
+        <option value="ママ">ママ</option>
+        <option value="お父さん">お父さん</option>
     </select>
 
-    <!-- 残りポイント表示 -->
-    <h3>残りポイント: <span id="remainingPoints">-</span></h3>
-
-    <!-- 取引履歴 -->
-    <h3>取引履歴</h3>
+    <h2>取引履歴</h2>
     <table border="1">
         <thead>
             <tr>
                 <th>日付</th>
                 <th>支払い</th>
                 <th>ポイント</th>
-                <th>ポイント使用</th>
             </tr>
         </thead>
-        <tbody id="transactionTable">
+        <tbody id="historyTable">
         </tbody>
     </table>
 
+    <h2>残りポイント: <span id="remainingPoints">-</span></h2>
+
     <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbyGSMPjhEfip7Mj7aZpjIcjsTtf2qNGMr-ML2a6J1AZF_FJYN2zmDNIOzwPG9GpllkBWw/exec";
+        const apiUrl = "https://script.google.com/macros/s/AKfycbzOY7dcKz3bBMGags3Mf2ipaX8P1yAco9SqETaGIQxmH4Nm3grHl2Nwf3puJ-GeEEmRbw/exec";
 
-        async function fetchData() {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            const userSelect = document.getElementById("userSelect");
+        document.getElementById("userSelect").addEventListener("change", async function() {
+            const selectedUser = this.value;
+            if (!selectedUser) return;
 
-            // 名前のリストをドロップダウンに追加
-            userSelect.innerHTML = '<option value="">選択してください</option>';
-            Object.keys(data).forEach(name => {
-                let option = document.createElement("option");
-                option.value = name;
-                option.textContent = name;
-                userSelect.appendChild(option);
-            });
+            try {
+                const response = await fetch(apiUrl);
+                if (!response.ok) throw new Error("データ取得に失敗しました");
 
-            // 保存
-            window.userData = data;
-        }
+                const data = await response.json();
+                const userData = data[selectedUser];
 
-        function displayUserData() {
-            const selectedUser = document.getElementById("userSelect").value;
-            const remainingPoints = document.getElementById("remainingPoints");
-            const transactionTable = document.getElementById("transactionTable");
+                // 残りポイントの表示
+                document.getElementById("remainingPoints").textContent = userData.points;
 
-            if (!selectedUser || !window.userData[selectedUser]) {
-                remainingPoints.textContent = "-";
-                transactionTable.innerHTML = "";
-                return;
+                // 取引履歴の表示
+                const historyTable = document.getElementById("historyTable");
+                historyTable.innerHTML = "";
+                
+                userData.transactions.forEach(transaction => {
+                    const row = document.createElement("tr");
+                    row.innerHTML = `
+                        <td>${transaction.date}</td>
+                        <td>${transaction.payment}</td>
+                        <td>${transaction.points}</td>
+                    `;
+                    historyTable.appendChild(row);
+                });
+
+            } catch (error) {
+                console.error("エラー:", error);
             }
-
-            const user = window.userData[selectedUser];
-
-            // 残りポイント表示
-            remainingPoints.textContent = user.points;
-
-            // 取引履歴を表示
-            transactionTable.innerHTML = user.transactions.map(trx => `
-                <tr>
-                    <td>${trx.date}</td>
-                    <td>${trx.payment}</td>
-                    <td>${trx.points}</td>
-                    <td>${trx.usedPoints}</td>
-                </tr>
-            `).join("");
-        }
-
-        // 初回データ取得
-        fetchData();
+        });
     </script>
-
 </body>
 </html>
