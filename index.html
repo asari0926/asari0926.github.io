@@ -33,37 +33,54 @@
     <script>
         const apiUrl = "https://script.google.com/macros/s/AKfycbyW_EOjmBnPRvUrm-ncOSEh8iBp6VKGUuTNr_jBZ-T3utOjw3-hmaejMa-qv2TeAIUZHw/exec";
 
-        document.getElementById("userSelect").addEventListener("change", async function() {
-            const selectedUser = this.value;
-            if (!selectedUser) return;
-
+        async function fetchData() {
             try {
                 const response = await fetch(apiUrl);
                 if (!response.ok) throw new Error("データ取得に失敗しました");
 
                 const data = await response.json();
-                const userData = data[selectedUser];
-
-                // 残りポイントの表示
-                document.getElementById("remainingPoints").textContent = userData.points;
-
-                // 取引履歴の表示
-                const historyTable = document.getElementById("historyTable");
-                historyTable.innerHTML = "";
-                
-                userData.transactions.forEach(transaction => {
-                    const row = document.createElement("tr");
-                    row.innerHTML = `
-                        <td>${transaction.date}</td>
-                        <td>${transaction.payment}</td>
-                        <td>${transaction.points}</td>
-                    `;
-                    historyTable.appendChild(row);
-                });
-
+                console.log("取得したデータ:", data); // ← デバッグ用にデータを出力
+                return data;
             } catch (error) {
                 console.error("エラー:", error);
+                return null;
             }
+        }
+
+        document.getElementById("userSelect").addEventListener("change", async function() {
+            const selectedUser = this.value;
+            if (!selectedUser) {
+                document.getElementById("historyTable").innerHTML = "";
+                document.getElementById("remainingPoints").textContent = "-";
+                return;
+            }
+
+            const data = await fetchData();
+            if (!data || !data[selectedUser]) {
+                console.error("選択したユーザーのデータが見つかりません");
+                return;
+            }
+
+            console.log(`選択されたユーザー: ${selectedUser}`, data[selectedUser]); // ← 追加デバッグ
+
+            const userData = data[selectedUser];
+
+            // 残りポイントの表示
+            document.getElementById("remainingPoints").textContent = userData.points;
+
+            // 取引履歴の表示
+            const historyTable = document.getElementById("historyTable");
+            historyTable.innerHTML = "";
+
+            userData.transactions.forEach(transaction => {
+                const row = document.createElement("tr");
+                row.innerHTML = `
+                    <td>${transaction.date}</td>
+                    <td>${transaction.payment}</td>
+                    <td>${transaction.points}</td>
+                `;
+                historyTable.appendChild(row);
+            });
         });
     </script>
 </body>
