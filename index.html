@@ -20,6 +20,12 @@
     </style>
 </head>
 <body>
+    
+<h2>ポイント使用</h2>
+<input type="text" id="userName" placeholder="名前を入力">
+<input type="number" id="usePoints" placeholder="使用するポイント">
+<button onclick="usePoints()">ポイントを使用</button>
+<p id="result"></p>
 
 <h2>ポイントカード</h2>
 <table id="dataTable">
@@ -30,46 +36,31 @@
 </table>
 
 <script>
-    const apiUrl = "【GASのデプロイURL】"; // GASのデプロイURLをここに貼り付け
+const apiUrl = "https://script.google.com/macros/s/AKfycbydn_ee4WGsGvyjakwo2qNji-izV2S4MhOeDv9JxcfrmmVWMGWoIzRX0v1lRKb6bZKZYg/exec";
 
-    async function fetchData() {
-        try {
-            const response = await fetch(apiUrl);
-            const data = await response.json();
-            displayData(data);
-        } catch (error) {
-            console.error("データ取得エラー:", error);
-        }
+async function usePoints() {
+    const name = document.getElementById("userName").value;
+    const usedPoints = document.getElementById("usePoints").value;
+
+    if (!name || !usedPoints) {
+        alert("名前とポイントを入力してください！");
+        return;
     }
 
-    function displayData(data) {
-        const tableHeader = document.getElementById("tableHeader");
-        const tableBody = document.getElementById("tableBody");
+    const response = await fetch(apiUrl, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, usedPoints: Number(usedPoints) })
+    });
 
-        if (data.length === 0) return;
+    const result = await response.json();
+    document.getElementById("result").textContent = result.success
+        ? `新しいポイント: ${result.newPoints}`
+        : "エラー: " + result.message;
 
-        // ヘッダーを作成
-        tableHeader.innerHTML = "";
-        Object.keys(data[0]).forEach(key => {
-            const th = document.createElement("th");
-            th.textContent = key;
-            tableHeader.appendChild(th);
-        });
+    fetchData(); // 最新データを取得（ポイントを減らした後、反映させる）
+}
 
-        // データを表示
-        tableBody.innerHTML = "";
-        data.forEach(row => {
-            const tr = document.createElement("tr");
-            Object.values(row).forEach(value => {
-                const td = document.createElement("td");
-                td.textContent = value;
-                tr.appendChild(td);
-            });
-            tableBody.appendChild(tr);
-        });
-    }
-
-    fetchData();
 </script>
 
 </body>
