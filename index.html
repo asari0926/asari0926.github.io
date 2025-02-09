@@ -23,6 +23,7 @@
                 <th>日付</th>
                 <th>支払い</th>
                 <th>ポイント</th>
+                <th>ポイント使用</th> <!-- 🔹 追加 -->
             </tr>
         </thead>
         <tbody id="historyTable">
@@ -66,8 +67,12 @@
 
             const userData = data[selectedUser];
 
-            // 残りポイントの表示
-            document.getElementById("remainingPoints").textContent = userData.points;
+            // 🔹 「ポイント使用」も考慮して残りポイントを計算
+            const totalPoints = userData.transactions.reduce((sum, t) => sum + t.points, 0);
+            const usedPoints = userData.transactions.reduce((sum, t) => sum + (t.usedPoints || 0), 0);
+            const remainingPoints = totalPoints - usedPoints;
+
+            document.getElementById("remainingPoints").textContent = remainingPoints;
 
             // 取引履歴の表示
             const historyTable = document.getElementById("historyTable");
@@ -79,6 +84,7 @@
                     <td>${transaction.date}</td>
                     <td>${transaction.payment}</td>
                     <td>${transaction.points}</td>
+                    <td>${transaction.usedPoints || 0}</td> <!-- 🔹 追加 -->
                 `;
                 historyTable.appendChild(row);
             });
