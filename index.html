@@ -1,94 +1,28 @@
-<!DOCTYPE html>
-<html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ポイント管理</title>
-    <link rel="stylesheet" href="styles.css"> <!-- 🔹CSSファイルを読み込む -->
-</head>
-<body>
-    <h1>ポイント管理システム</h1>
+import random
 
-    <label for="userSelect"><strong>誰を選択:</strong></label>
-    <select id="userSelect">
-        <option value="">選択してください</option>
-        <option value="ママ">ママ</option>
-        <option value="お父さん">お父さん</option>
-    </select>
+# --- 準備 ---
+monster_hp = 3  # モンスターの体力
+player_hp = 5   # あなたの体力
+answer = random.randint(1, 10) # 1から10のどれかが正解
 
-    <h2>取引履歴</h2>
-    <table>
-        <thead>
-            <tr>
-                <th>日付</th>
-                <th>支払い</th>
-                <th>ポイント</th>
-                <th>ポイント使用</th> <!-- 🔹 追加 -->
-            </tr>
-        </thead>
-        <tbody id="historyTable">
-        </tbody>
-    </table>
+print("👾 モンスターが現れた！")
+print("1から10の数字を当てて、モンスターを攻撃しよう！")
 
-    <h2>残りポイント: <span id="remainingPoints">-</span></h2>
+# --- バトル開始 ---
+while monster_hp > 0 and player_hp > 0:
+    print(f"\nあなたのHP: {player_hp} | モンスターのHP: {monster_hp}")
+    guess = int(input("1〜10の数字を入力してね："))
 
-    <script>
-        const apiUrl = "https://script.google.com/macros/s/AKfycbwYfmhad_yYeaLUDUKiifSOxr11BCkgg-Jo9tuPnWh_QyYkRwMiv8gVCNfNrWzYCP1j8w/exec";
+    if guess == answer:
+        print("🎯 クリティカルヒット！モンスターにダメージ！")
+        monster_hp -= 1
+        answer = random.randint(1, 10) # 正解を新しくする
+    else:
+        print("❌ ハズレ！反撃を受けた！")
+        player_hp -= 1
 
-        async function fetchData() {
-            try {
-                const response = await fetch(apiUrl);
-                if (!response.ok) throw new Error("データ取得に失敗しました");
-
-                const data = await response.json();
-                console.log("取得したデータ:", data);
-                return data;
-            } catch (error) {
-                console.error("エラー:", error);
-                return null;
-            }
-        }
-
-        document.getElementById("userSelect").addEventListener("change", async function() {
-            const selectedUser = this.value;
-            if (!selectedUser) {
-                document.getElementById("historyTable").innerHTML = "";
-                document.getElementById("remainingPoints").textContent = "-";
-                return;
-            }
-
-            const data = await fetchData();
-            if (!data || !data[selectedUser]) {
-                console.error("選択したユーザーのデータが見つかりません");
-                return;
-            }
-
-            console.log(`選択されたユーザー: ${selectedUser}`, data[selectedUser]);
-
-            const userData = data[selectedUser];
-
-            // 🔹 「ポイント使用」も考慮して残りポイントを計算
-            const totalPoints = userData.transactions.reduce((sum, t) => sum + t.points, 0);
-            const usedPoints = userData.transactions.reduce((sum, t) => sum + (t.usedPoints || 0), 0);
-            const remainingPoints = totalPoints - usedPoints;
-
-            document.getElementById("remainingPoints").textContent = remainingPoints;
-
-            // 取引履歴の表示
-            const historyTable = document.getElementById("historyTable");
-            historyTable.innerHTML = "";
-
-            userData.transactions.forEach(transaction => {
-                const row = document.createElement("tr");
-                row.innerHTML = `
-                    <td>${transaction.date}</td>
-                    <td>${transaction.payment}</td>
-                    <td>${transaction.points}</td>
-                    <td>${transaction.usedPoints || 0}</td> <!-- 🔹 追加 -->
-                `;
-                historyTable.appendChild(row);
-            });
-        });
-    </script>
-</body>
-</html>
+# --- 決着 ---
+if monster_hp <= 0:
+    print("\n🏆 おめでとう！モンスターを倒した！")
+else:
+    print("\n💀 目の前が真っ暗になった...")
